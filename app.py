@@ -8,7 +8,8 @@ from flask_wtf.csrf import CSRFProtect
 from sqlalchemy import or_, func
 from config import Config
 from models import db, User, Contract, ServiceOrder, WorkflowEvent, AuditLog
-from forms import LoginForm, ContractForm, OrderForm, TransitionForm
+# --- MODIFICACAO 1: IMPORTADO ChangePasswordForm ---
+from forms import LoginForm, ContractForm, OrderForm, TransitionForm, ChangePasswordForm
 
 app=Flask(__name__); app.config.from_object(Config); db.init_app(app); csrf=CSRFProtect(app)
 login=LoginManager(app); login.login_view='login_view'; login.login_message='Entre para acessar o sistema.'
@@ -134,6 +135,24 @@ def report_csv():
 @login_required
 @roles('admin','gestor_contrato')
 def audit_view(): return render_template('audit.html',items=AuditLog.query.order_by(AuditLog.created_at.desc()).limit(200).all())
+
+# --- MODIFICACAO 2: ROTA DE TROCA DE SENHA ---
+@app.route('/change-password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    f = ChangePasswordForm()
+    if f.validate_on_submit():
+        if not current_user.check_password(f.current_password.data):
+            flash('Senha atual incorreta.', 'danger')
+        else:
+            current_user.set_password(f.new_password.data)
+            db.session.commit()
+            audit('UPDATE', 'User', current_user.id, 'Senha alterada')
+            db.session.commit()
+            flash('Senha alterada com sucesso!', 'success')
+            return redirect(url_for('dashboard'))
+    return render_template('form.html', form=f, title='Trocar Senha')
+
 @app.errorhandler(403)
 def e403(e): return render_template('error.html',code=403,msg='Acesso não autorizado para este perfil.'),403
 @app.errorhandler(404)
