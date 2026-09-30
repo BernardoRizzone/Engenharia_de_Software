@@ -13,5 +13,5 @@ def test_protected_redirect():
 def test_login_and_dashboard():
  app.config.update(TESTING=True,WTF_CSRF_ENABLED=False)
  with app.test_client() as c:
-  r=c.post('/login',data={'username':'admin','password':'Admin@123'},follow_redirects=True)
+  r=c.post('/login',data={'username':'gestor','password':'Gestor@123'},follow_redirects=True)
   assert r.status_code==200; assert 'Painel de execução'.encode() in r.data
