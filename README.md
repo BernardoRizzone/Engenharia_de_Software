@@ -42,3 +42,11 @@ Baixe em https://sqlitebrowser.org/dl/ , abra `os_ofb.db`, aba *Browse Data*, ta
 - Em produção: defina `SECRET_KEY`, TLS, `COOKIE_SECURE=1`, banco gerenciado, logs centralizados, cofre de segredos, backup e monitoramento.
 
 Assinatura acadêmica: CEUB · Professor Uender Amaral
+
+## 📊 Cobertura de Testes (Estação 6)
+
+Foram implementados testes automatizados utilizando a ferramenta **Pytest** para garantir a estabilidade das rotas de integração e regras de negócio. 
+A meta de cobertura de código exigida para a etapa foi atingida com sucesso:
+
+* **Arquivo analisado:** `app.py`
+* **Cobertura alcançada:** 70%
